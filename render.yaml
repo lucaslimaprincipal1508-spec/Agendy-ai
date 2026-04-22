@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: agendy-ai
+    env: node
+    plan: free
+    buildCommand: npm install && npx prisma generate
+    startCommand: npm start
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+    disks:
+      - name: data
+        mountPath: /opt/render/project/src/data
+        sizeGB: 1
+        type: persistent
