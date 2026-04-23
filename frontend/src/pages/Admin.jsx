@@ -11,7 +11,7 @@ function Admin() {
 
   const fetchBookings = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/bookings');
+      const response = await axios.get('/api/bookings');
       setBookings(response.data);
     } catch (error) {
       alert('Erro ao carregar agendamentos');
@@ -21,7 +21,7 @@ function Admin() {
 
   const updateStatus = async (id, status) => {
     try {
-      await axios.patch(`http://localhost:5000/api/bookings/${id}`, { status });
+      await axios.patch(`/api/bookings/${id}`, { status });
       fetchBookings();
     } catch (error) {
       alert('Erro ao atualizar status');

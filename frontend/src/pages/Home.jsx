@@ -16,7 +16,7 @@ function Home() {
     setLoading(true);
     setSuccess(false);
     try {
-      await axios.post('http://localhost:5000/api/bookings', formData);
+      await axios.post('/api/bookings', formData);
       setSuccess(true);
       setFormData({ customerName: '', customerPhone: '', date: '', time: '' });
     } catch (error) {
