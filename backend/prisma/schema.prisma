@@ -17,8 +17,17 @@ model User {
 
 model Appointment {
   id     String   @id @default(cuid())
-  date   DateTime // Aqui foi a correção: tirei o @ e deixei só o tipo
+  date   DateTime
   time   String
   userId String
   user   User     @relation(fields: [userId], references: [id])
+}
+
+model Booking {
+  id            String   @id @default(cuid())
+  customerName  String
+  customerPhone String
+  date          DateTime
+  time          String
+  status        String   @default("PENDING")
 }

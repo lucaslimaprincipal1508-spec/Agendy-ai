@@ -137,6 +137,43 @@ const requireAuth = (req, res, next) => {
   }
 };
 
+  // PUBLIC BOOKINGS FOR CUSTOMERS (Home.jsx, Admin.jsx)
+  app.post('/api/bookings', async (req, res) => {
+    try {
+      const { customerName, customerPhone, date, time } = req.body;
+      const booking = await prisma.booking.create({
+        data: { customerName, customerPhone, date: new Date(date), time }
+      });
+      res.status(201).json(booking);
+    } catch (error) {
+      res.status(500).json({ error: 'Erro ao agendar' });
+    }
+  });
+
+  app.get('/api/bookings', async (req, res) => {
+    try {
+      const bookings = await prisma.booking.findMany({
+        orderBy: { date: 'asc' }
+      });
+      res.json(bookings);
+    } catch (error) {
+      res.status(500).json({ error: 'Erro ao buscar agendamentos' });
+    }
+  });
+
+  app.patch('/api/bookings/:id', async (req, res) => {
+    try {
+      const { status } = req.body;
+      const booking = await prisma.booking.update({
+        where: { id: req.params.id },
+        data: { status }
+      });
+      res.json(booking);
+    } catch (error) {
+      res.status(500).json({ error: 'Erro ao atualizar' });
+    }
+  });
+
 app.post('/appointments', requireAuth, async (req, res) => {
   try {
     const { date, time } = req.body;
