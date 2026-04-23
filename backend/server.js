@@ -176,5 +176,5 @@ app.delete('/appointments/:id', requireAuth, async (req, res) => {
 app.get('/', (req, res) => res.send('🚀 Backend Agendy-ai Online!'));
 
 app.listen(PORT, () => {
-  console.log(`🚀 Servidor rodando em: http://localhost:${PORT}`);
+  console.log(`🚀 Servidor rodando em: https://agendy-ai.onrender.com`);
 });
