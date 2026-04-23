@@ -3,7 +3,7 @@ import React from 'react';
 export default function Login() {
   const handleGoogleLogin = () => {
     // Pegamos a URL do backend (se estiver na nuvem usa VITE_API_URL, senão usa localhost)
-const backendUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
+const backendUrl = import.meta.env.VITE_API_URL || "https://agendy-ai-backend.onrender.com";
     window.location.href = `${backendUrl}/auth/google`;
   };
 

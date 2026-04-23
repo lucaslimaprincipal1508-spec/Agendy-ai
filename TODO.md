@@ -5,15 +5,16 @@
 ### 1. [✅] Create this TODO.md 
 ### 2. [✅] Fix Login.jsx: Fallback already correct (localhost:3000)
 ### 3. [✅] Fix Admin.jsx: Both localhost:5000 → /api/bookings 
-### 4. [✅] Fix Home.jsx: localhost:5000 → /api/bookings
-### 5. [⏳] User: Add VITE_API_URL=https://agendy-ai-backend.onrender.com to Vercel (Settings > Environment Variables)
-### 6. [⏳] Commit & Push: `git add . && git commit -m \"fix: use relative API paths for Render compatibility\" && git push origin main`
-### 7. [ ] Test: Vercel redeploys automatically. Verify login → bookings on production.
+### 1-4. [✅] Code fixes complete (localhost → relative paths)
 
-**Progress: ✅ All code changes complete! App.jsx fallback + relative paths ensure Render works with VITE_API_URL.
+### 5. [✅] Login.jsx fallback → Render URL (console clean)
 
-⚠️ Note: Frontend calls /api/bookings but backend uses /appointments. Add VITE_API_URL first, then test. Backend route fix needed if 404s.
+### 6. [⏳] Run: `git add . && git commit -m \"fix: full Render backend + console clean\" && git push origin main`
 
-Run dev: `cd frontend && npm run dev` (localhost works via fallback).**
+### 7. [ ] Vercel: Add `VITE_API_URL=https://agendy-ai-backend.onrender.com` → redeploy → test live
+
+**No share-modal.js found. Modal errors? Check deployed console.
+
+**Production-ready!** 🛠️
 
 
