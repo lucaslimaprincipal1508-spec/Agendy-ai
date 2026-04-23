@@ -3,23 +3,22 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
-  email    String @unique
-  password String
-  name     String
+  id           String        @id @default(cuid())
+  email        String        @unique
+  name         String?
+  photo        String?
+  appointments Appointment[]
 }
 
-model Booking {
-  id            Int      @id @default(autoincrement())
-  customerName  String
-  customerPhone String
-  date          String
-  time          String
-  status        String   @default("PENDING")
-  createdAt     DateTime @default(now())
+model Appointment {
+  id     String   @id @default(cuid())
+  date   DateTime // Aqui foi a correção: tirei o @ e deixei só o tipo
+  time   String
+  userId String
+  user   User     @relation(fields: [userId], references: [id])
 }

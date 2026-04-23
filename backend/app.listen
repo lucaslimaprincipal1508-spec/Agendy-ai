@@ -1,0 +1,75 @@
+// ====================================================
+// MIDDLEWARE DE SEGURANÇA (A FECHADURA)
+// ====================================================
+// Essa função intercepta a requisição e confere se o cara tem o crachá (cookie JWT)
+const requireAuth = (req, res, next) => {
+  const token = req.cookies.token;
+  if (!token) return res.status(401).json({ error: 'Acesso negado. Faça login.' });
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.userId = decoded.id; // Salva o ID do usuário na requisição para as rotas usarem!
+    next(); // Pode passar!
+  } catch (err) {
+    res.status(401).json({ error: 'Sessão inválida ou expirada.' });
+  }
+};
+
+// ====================================================
+// ROTAS DE AGENDAMENTO (O CORAÇÃO DO APP)
+// ====================================================
+
+// 1. CRIAR Agendamento
+app.post('/appointments', requireAuth, async (req, res) => {
+  try {
+    const { date, time } = req.body;
+    
+    const appointment = await prisma.appointment.create({
+      data: {
+        date: new Date(date), // Transforma a string do frontend em Data real pro banco
+        time: time,
+        userId: req.userId // Vem direto do token de segurança, impossível fraudar!
+      }
+    });
+    
+    res.status(201).json(appointment);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erro ao criar agendamento' });
+  }
+});
+
+// 2. LISTAR Agendamentos (Só do usuário logado)
+app.get('/appointments', requireAuth, async (req, res) => {
+  try {
+    const appointments = await prisma.appointment.findMany({
+      where: { userId: req.userId }, // Traz só os agendamentos DESSA pessoa
+      orderBy: { date: 'asc' } // Ordena do mais próximo pro mais longe
+    });
+    res.json(appointments);
+  } catch (error) {
+    res.status(500).json({ error: 'Erro ao buscar agendamentos' });
+  }
+});
+
+// 3. DELETAR Agendamento
+app.delete('/appointments/:id', requireAuth, async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Primeiro achamos o agendamento
+    const appointment = await prisma.appointment.findUnique({ where: { id } });
+    if (!appointment) return res.status(404).json({ error: 'Agendamento não encontrado' });
+
+    // Regra de Ouro: Só o dono pode deletar
+    if (appointment.userId !== req.userId) {
+      return res.status(403).json({ error: 'Você não tem permissão para cancelar isso' });
+    }
+
+    // Se chegou aqui, tá seguro. Pode apagar.
+    await prisma.appointment.delete({ where: { id } });
+    res.json({ message: 'Agendamento cancelado com sucesso' });
+  } catch (error) {
+    res.status(500).json({ error: 'Erro ao cancelar agendamento' });
+  }
+});
