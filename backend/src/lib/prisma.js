@@ -1,9 +1,19 @@
-const { PrismaClient } = require('@prisma/client');
+const { PrismaClient } = require('@prisma/client')
 
-const globalForPrisma = globalThis;
+const prismaClientSingleton = () => {
+  return new PrismaClient({
+    datasources: {
+      db: {
+        url: process.env.DATABASE_URL,
+      },
+    },
+  })
+}
 
-const prisma = globalForPrisma.prisma ?? new PrismaClient();
+const globalForPrisma = globalThis
 
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
+const prisma = globalForPrisma.prisma ?? prismaClientSingleton()
 
-module.exports = prisma;
+if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
+
+module.exports = prisma
